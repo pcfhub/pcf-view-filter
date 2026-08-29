@@ -405,6 +405,30 @@ check(
         + `label: ${view.find('.ViewFilter-clear').getAttribute('aria-label')}`,
 );
 
+/*
+ * The pager chevrons, same rule as the two in the bar: inline, so the button’s
+ * colour reaches them. Added beside the labels rather than instead of them, so
+ * the accessible name is unchanged — which is what the last check holds.
+ */
+for (const [what, selector] of [['previous', '.ViewFilter-previous'], ['next', '.ViewFilter-next']]) {
+    // A tag selector scoped to the button: `dev/dom.js` supports 'tag',
+    // '.class' and 'tag.class', and throws by name on anything else.
+    const button = view.find(selector);
+    const glyph = button && button.querySelector('svg');
+
+    check(
+        `the ${what} button carries an inline svg chevron, not an image`,
+        glyph !== null && glyph.tagName.toLowerCase() === 'svg',
+        glyph ? glyph.tagName : 'no svg found',
+    );
+
+    check(
+        `and still says what it does in words, so the name did not change`,
+        button.textContent.includes(`resx:ViewFilter_${what === 'previous' ? 'Previous' : 'Next'}`),
+        button.textContent,
+    );
+}
+
 /* ------------------------------------------------------------- filtering */
 
 /*

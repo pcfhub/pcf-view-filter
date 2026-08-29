@@ -371,6 +371,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: var(--spacingHorizontalXS, 4px);
     box-sizing: border-box;
     min-height: 32px;
     padding: var(--spacingVerticalXS, 4px) var(--spacingHorizontalM, 12px);
@@ -386,6 +387,36 @@
         background-color var(--ViewFilter-duration) var(--ViewFilter-curve),
         border-color var(--ViewFilter-duration) var(--ViewFilter-curve),
         color var(--ViewFilter-duration) var(--ViewFilter-curve);
+}
+
+/*
+  The pager chevrons.
+
+  Inline `<svg>` for the same reason as the two in the bar: an icon behind
+  `<img src>` renders in an isolated document that cannot read this stylesheet,
+  so it cannot follow a dark theme. These inherit the button’s `color`.
+
+  `flex: none` so a chevron never squashes on a narrow form, where the label is
+  what should wrap instead.
+*/
+.ViewFilter-chevron {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+}
+
+/*
+  Mirrored in right-to-left, because a chevron is directional and the flex
+  reorder alone does not turn the glyph around — `<` stays `<` and ends up
+  pointing at the text instead of away from it.
+
+  Keyed off *any* right-to-left ancestor rather than off this control’s own
+  `dir`. This control sets `dir` on its container, but a host form in an
+  right-to-left language sets it further up, and the sibling dataset controls
+  do not set it at all — an ancestor selector is right in all three cases.
+*/
+[dir="rtl"] .ViewFilter-chevron {
+    transform: scaleX(-1);
 }
 
 .ViewFilter-pager button:hover {

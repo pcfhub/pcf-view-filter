@@ -729,7 +729,12 @@ export class ViewFilter implements ComponentFramework.StandardControl<IInputs, I
         const previous = document.createElement('button');
         previous.type = 'button';
         previous.className = 'ViewFilter-previous';
-        previous.textContent = getString('ViewFilter_Previous');
+        // Chevron then label. The glyph is decoration on a button that already
+        // says what it does, so the accessible name is unchanged.
+        previous.append(
+            icon('ViewFilter-chevron', CHEVRON_PREVIOUS, STROKED),
+            document.createTextNode(getString('ViewFilter_Previous')),
+        );
         previous.disabled = this.page <= 1;
         previous.addEventListener('click', () => {
             if (this.page <= 1) {
@@ -750,7 +755,12 @@ export class ViewFilter implements ComponentFramework.StandardControl<IInputs, I
         const next = document.createElement('button');
         next.type = 'button';
         next.className = 'ViewFilter-next';
-        next.textContent = getString('ViewFilter_Next');
+        // Label then chevron, the other way round: the glyph points the way the
+        // button goes, so it trails rather than leads.
+        next.append(
+            document.createTextNode(getString('ViewFilter_Next')),
+            icon('ViewFilter-chevron', CHEVRON_NEXT, STROKED),
+        );
         next.disabled = !dataset.paging.hasNextPage;
         next.addEventListener('click', () => {
             if (!dataset.paging.hasNextPage) {
@@ -851,9 +861,23 @@ function escapeLike(term: string): string {
  *  name: it parses, it appends, it occupies no space and draws nothing. */
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
-/** Fluent's magnifier and dismiss glyphs, on a 20×20 grid at a 1.5px stroke. */
+/** Fluent's magnifier and dismiss glyphs, filled, on a 20×20 grid. */
 const SEARCH_PATHS = ['M8.5 3a5.5 5.5 0 1 0 3.35 9.86l3.65 3.64 1.06-1.06-3.64-3.65A5.5 5.5 0 0 0 8.5 3Zm-4 5.5a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z'];
 const CLEAR_PATHS = ['M4.4 4.55 4.5 4.44a.5.5 0 0 1 .64-.06l.07.06L10 9.29l4.79-4.85a.5.5 0 0 1 .78.63l-.06.07L10.71 10l4.85 4.79a.5.5 0 0 1-.63.78l-.07-.06L10 10.71l-4.79 4.85a.5.5 0 0 1-.78-.63l.06-.07L9.29 10 4.44 5.21a.5.5 0 0 1-.06-.64l.06-.07-.1.11Z'];
+
+/** The pager chevrons, stroked rather than filled — two lines each. */
+const CHEVRON_PREVIOUS = ['M12.5 5 7.5 10l5 5'];
+const CHEVRON_NEXT = ['M7.5 5l5 5-5 5'];
+
+/** Filled glyph attributes, and stroked ones. */
+const FILLED = { fill: 'currentColor' };
+const STROKED = {
+    fill: 'none',
+    stroke: 'currentColor',
+    'stroke-width': '1.5',
+    'stroke-linecap': 'round',
+    'stroke-linejoin': 'round',
+};
 
 /**
  * An inline `<svg>`, which is the only kind of icon that can follow the theme.
@@ -869,7 +893,7 @@ const CLEAR_PATHS = ['M4.4 4.55 4.5 4.44a.5.5 0 0 1 .64-.06l.07.06L10 9.29l4.79-
  * has an accessible name — the field has its label, the button has its
  * `aria-label` — so announcing the glyph as well would only add a word.
  */
-function icon(className: string, paths: string[]): SVGSVGElement {
+function icon(className: string, paths: string[], attrs: Record<string, string> = FILLED): SVGSVGElement {
     const svg = document.createElementNS(SVG_NS, 'svg') as SVGSVGElement;
 
     // `classList`, because `className` on an SVG element is a read-only
@@ -883,7 +907,10 @@ function icon(className: string, paths: string[]): SVGSVGElement {
         const path = document.createElementNS(SVG_NS, 'path');
 
         path.setAttribute('d', d);
-        path.setAttribute('fill', 'currentColor');
+
+        for (const [name, value] of Object.entries(attrs)) {
+            path.setAttribute(name, value);
+        }
 
         svg.appendChild(path);
     }
