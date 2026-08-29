@@ -84,6 +84,8 @@ export class ViewFilter implements ComponentFramework.StandardControl<IInputs, I
     private container!: HTMLDivElement;
     /** Built once and never rebuilt — see the note above. */
     private bar!: HTMLDivElement;
+    /** The filled surface the magnifier and the input share. */
+    private field!: HTMLDivElement;
     private search!: HTMLInputElement;
     private clear!: HTMLButtonElement;
     /** Rebuilt on every render. */
@@ -160,14 +162,37 @@ export class ViewFilter implements ComponentFramework.StandardControl<IInputs, I
         this.search.addEventListener('input', this.onInput);
         this.search.addEventListener('keydown', this.onKeyDown);
 
+        /*
+         * The input sits inside a surface rather than being the surface.
+         *
+         * That is what lets the magnifier sit *in* the field the way Fluent's
+         * `contentBefore` does, rather than beside it: the wrapper carries the
+         * fill, the border and the focus ring, and the input is a hole in it.
+         * A `position: absolute` icon over a padded input is the other way to
+         * do this, and it overlaps the text at narrow widths.
+         *
+         * Flex order also means right-to-left needs no code — the container's
+         * `dir` flips the magnifier to the other end on its own.
+         */
+        this.field = document.createElement('div');
+        this.field.className = 'ViewFilter-field';
+        this.field.append(icon('ViewFilter-searchIcon', SEARCH_PATHS), this.search);
+
         this.clear = document.createElement('button');
         this.clear.className = 'ViewFilter-clear';
         this.clear.type = 'button';
+        /*
+         * Icon-only, so its accessible name comes from `aria-label` rather than
+         * from text — set in `paintBar` from the same .resx string the label
+         * used to be. `title` carries it to a sighted user on hover, which is
+         * the half an icon-only button otherwise loses.
+         */
+        this.clear.append(icon('ViewFilter-clearIcon', CLEAR_PATHS));
         this.clear.addEventListener('click', this.onClear);
 
         this.bar = document.createElement('div');
         this.bar.className = 'ViewFilter-bar';
-        this.bar.append(this.search, this.clear);
+        this.bar.append(this.field, this.clear);
 
         this.body = document.createElement('div');
         this.body.className = 'ViewFilter-body';
@@ -556,7 +581,21 @@ export class ViewFilter implements ComponentFramework.StandardControl<IInputs, I
          */
         this.search.disabled = !searchable || context.mode.isControlDisabled;
 
-        this.clear.textContent = getString('ViewFilter_Clear');
+        /*
+         * The surface carries the disabled look, not the input inside it, so it
+         * needs telling. A class rather than `:has(:disabled)` — that selector
+         * is fine on a current Chromium and this is one less thing to be true
+         * about whatever a customer is running.
+         */
+        this.field.classList.toggle('ViewFilter-field--disabled', this.search.disabled);
+
+        /*
+         * Icon-only, so the .resx string that used to be the button's text is
+         * now its accessible name. `title` shows it on hover, which is what an
+         * icon-only button otherwise takes away from a sighted user.
+         */
+        this.clear.setAttribute('aria-label', getString('ViewFilter_Clear'));
+        this.clear.title = getString('ViewFilter_Clear');
         this.clear.hidden = this.term === '';
         this.clear.disabled = this.search.disabled;
 
@@ -806,4 +845,48 @@ export class ViewFilter implements ComponentFramework.StandardControl<IInputs, I
  */
 function escapeLike(term: string): string {
     return term.replace(/[%_[]/g, (character) => `[${character}]`);
+}
+
+/** The SVG namespace. `createElement('svg')` makes an *HTML* element of that
+ *  name: it parses, it appends, it occupies no space and draws nothing. */
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+/** Fluent's magnifier and dismiss glyphs, on a 20×20 grid at a 1.5px stroke. */
+const SEARCH_PATHS = ['M8.5 3a5.5 5.5 0 1 0 3.35 9.86l3.65 3.64 1.06-1.06-3.64-3.65A5.5 5.5 0 0 0 8.5 3Zm-4 5.5a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z'];
+const CLEAR_PATHS = ['M4.4 4.55 4.5 4.44a.5.5 0 0 1 .64-.06l.07.06L10 9.29l4.79-4.85a.5.5 0 0 1 .78.63l-.06.07L10.71 10l4.85 4.79a.5.5 0 0 1-.63.78l-.07-.06L10 10.71l-4.79 4.85a.5.5 0 0 1-.78-.63l.06-.07L9.29 10 4.44 5.21a.5.5 0 0 1-.06-.64l.06-.07-.1.11Z'];
+
+/**
+ * An inline `<svg>`, which is the only kind of icon that can follow the theme.
+ *
+ * An image behind `<img src>` — file or data URL, PNG or SVG — renders as an
+ * isolated document that cannot see this page's stylesheet, so a
+ * `currentColor` inside it resolves to black and a dark form gets a black icon
+ * on a dark background. `pcf-file-drop` shipped exactly that and it was found
+ * on a real form. Inline, `currentColor` resolves against the `color` the
+ * stylesheet sets, and the icon follows light and dark for free.
+ *
+ * Always decorative: every icon in this control sits on something that already
+ * has an accessible name — the field has its label, the button has its
+ * `aria-label` — so announcing the glyph as well would only add a word.
+ */
+function icon(className: string, paths: string[]): SVGSVGElement {
+    const svg = document.createElementNS(SVG_NS, 'svg') as SVGSVGElement;
+
+    // `classList`, because `className` on an SVG element is a read-only
+    // `SVGAnimatedString` and assigning to it silently does nothing.
+    svg.classList.add(className);
+    svg.setAttribute('viewBox', '0 0 20 20');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+
+    for (const d of paths) {
+        const path = document.createElementNS(SVG_NS, 'path');
+
+        path.setAttribute('d', d);
+        path.setAttribute('fill', 'currentColor');
+
+        svg.appendChild(path);
+    }
+
+    return svg;
 }

@@ -350,6 +350,61 @@ check(
     view.find('.ViewFilter-search').placeholder,
 );
 
+/* ------------------------------------------------------------------ icons */
+
+/*
+ * **Both icons are inline `<svg>`, and that is a theming decision.**
+ *
+ * The same glyph behind an `<img src>` — a file resource or a data URL, PNG or
+ * SVG — renders in an isolated document that cannot see this control's
+ * stylesheet, so its `currentColor` resolves to black and a dark form gets a
+ * black icon on a dark background. `pcf-file-drop` shipped exactly that and it
+ * was found on a real form, not here.
+ *
+ * Asserted on the element name because that is the whole of it: an `<img>`
+ * would look identical in a light theme and wrong in a dark one.
+ */
+for (const [what, selector] of [['magnifier', '.ViewFilter-searchIcon'], ['clear glyph', '.ViewFilter-clearIcon']]) {
+    check(
+        `the ${what} is an inline svg, not an image`,
+        view.find(selector) && view.find(selector).tagName.toLowerCase() === 'svg',
+        view.find(selector) ? view.find(selector).tagName : 'missing',
+    );
+
+    check(
+        `and is filled with currentColor, so the stylesheet decides the ${what}'s colour`,
+        view
+            .find(selector)
+            .querySelectorAll('path')
+            .every((path) => path.getAttribute('fill') === 'currentColor'),
+    );
+
+    /*
+     * Decorative. The field has its label and the button its `aria-label`, so
+     * announcing the glyph as well would add a word and no meaning.
+     */
+    check(
+        `and hidden from the accessibility tree, because the ${what} names nothing`,
+        view.find(selector).getAttribute('aria-hidden') === 'true',
+    );
+}
+
+/*
+ * **An icon-only button still has to have a name**, and this is the assertion
+ * that keeps it. The label used to be the button's text; it is now an
+ * `aria-label` read from the same .resx key, so a screen reader hears exactly
+ * what it heard before and a sighted user gets it back on hover as a `title`.
+ * Dropping the text without this is how an icon button ships as "button".
+ */
+check(
+    'the clear button carries no text, and takes its name from the .resx instead',
+    view.find('.ViewFilter-clear').textContent === ''
+        && view.find('.ViewFilter-clear').getAttribute('aria-label') === 'resx:ViewFilter_Clear'
+        && view.find('.ViewFilter-clear').title === 'resx:ViewFilter_Clear',
+    `text: ${JSON.stringify(view.find('.ViewFilter-clear').textContent)}, `
+        + `label: ${view.find('.ViewFilter-clear').getAttribute('aria-label')}`,
+);
+
 /* ------------------------------------------------------------- filtering */
 
 /*

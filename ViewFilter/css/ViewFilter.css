@@ -110,8 +110,16 @@
   a filled box with transparent borders, 32px tall — `medium`, the height a form
   uses. The borders are transparent rather than absent so the box does not
   change size when the disabled state colours them in.
+
+  The *wrapper* is the field, not the input. That is what puts the magnifier
+  inside the box rather than beside it, the way Fluent's `contentBefore` does,
+  and it is why the focus ring below is on `:focus-within`: the ring belongs to
+  the whole surface, including the icon, not to the hole in it.
 */
-.ViewFilter-search {
+.ViewFilter-field {
+    display: flex;
+    align-items: center;
+    gap: var(--spacingHorizontalXS, 4px);
     flex: 1 1 auto;
     /* A flex item's default `min-width: auto` refuses to shrink below its
        intrinsic width, which pushes the Clear button off a narrow form instead
@@ -123,10 +131,45 @@
     border: 1px solid transparent;
     border-radius: var(--ViewFilter-radius);
     background-color: var(--ViewFilter-background-hover);
+    transition: background-color var(--ViewFilter-duration) var(--ViewFilter-curve);
+}
+
+.ViewFilter-field:focus-within {
+    outline: 2px solid var(--ViewFilter-focus-outer);
+    outline-offset: 1px;
+    box-shadow: 0 0 0 4px var(--ViewFilter-focus-inner);
+}
+
+/*
+  The magnifier. `flex: none` so it never shrinks — an icon squashed to 4px on a
+  narrow form is worse than no icon — and the placeholder colour so it reads as
+  chrome rather than as content.
+
+  `currentColor` in the SVG resolves against this, which is the entire reason
+  the icon is inline rather than an `<img>`: an image renders in an isolated
+  document that cannot see this rule, and comes out black on a dark form.
+*/
+.ViewFilter-searchIcon {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    color: var(--ViewFilter-foreground-secondary);
+}
+
+/* The input is a hole in the surface above: no fill, no border, no ring of its
+   own. Give it a background and the wrapper's fill shows as a lighter rectangle
+   inside the field. */
+.ViewFilter-search {
+    flex: 1 1 auto;
+    min-width: 0;
+    align-self: stretch;
+    box-sizing: border-box;
+    padding: 0;
+    border-style: none;
+    background-color: transparent;
     color: var(--ViewFilter-foreground);
     font: inherit;
     outline-style: none;
-    transition: background-color var(--ViewFilter-duration) var(--ViewFilter-curve);
 }
 
 /* `opacity: 1` because Firefox dims placeholders by default, which drags the
@@ -136,10 +179,17 @@
     opacity: 1;
 }
 
-.ViewFilter-search:focus-visible {
-    outline: 2px solid var(--ViewFilter-focus-outer);
-    outline-offset: 1px;
-    box-shadow: 0 0 0 4px var(--ViewFilter-focus-inner);
+/*
+  The UA's own clear button, removed.
+
+  `type="search"` earns its keyboard and its semantics, and brings a WebKit
+  cancel button along with it — a second way to clear, drawn by the browser in a
+  colour it chose, sitting next to the one this control draws. Two X's in one
+  field is worse than either alone.
+*/
+.ViewFilter-search::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 /*
@@ -148,28 +198,45 @@
   state, and `opacity` would leave the placeholder below contrast for as long as
   the control is on the form.
 */
-.ViewFilter-search:disabled {
+.ViewFilter-field--disabled {
     background-color: transparent;
     border-color: var(--ViewFilter-stroke-disabled);
-    color: var(--ViewFilter-foreground-disabled);
-    cursor: not-allowed;
 }
 
+.ViewFilter-field--disabled .ViewFilter-searchIcon,
+.ViewFilter-search:disabled,
 .ViewFilter-search:disabled::placeholder {
     color: var(--ViewFilter-foreground-disabled);
 }
 
+.ViewFilter-search:disabled {
+    cursor: not-allowed;
+}
+
+/*
+  Icon-only, and therefore square: 32px to match the field's height, so the two
+  line up on the same baseline. Its accessible name is an `aria-label` set in
+  `index.ts` from the same .resx string the text label used to be.
+*/
 .ViewFilter-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
     box-sizing: border-box;
-    min-height: 32px;
-    padding: var(--spacingVerticalXS, 4px) var(--spacingHorizontalM, 12px);
-    font: inherit;
-    font-weight: var(--fontWeightSemibold, 600);
+    width: 32px;
+    height: 32px;
+    padding: 0;
     color: var(--ViewFilter-foreground);
     background-color: var(--ViewFilter-background);
     border: 1px solid var(--ViewFilter-stroke);
     border-radius: var(--ViewFilter-radius);
     cursor: pointer;
+}
+
+.ViewFilter-clearIcon {
+    width: 16px;
+    height: 16px;
 }
 
 .ViewFilter-clear:hover {
@@ -377,16 +444,29 @@
   is exactly what forced colours removes.
 */
 @media (forced-colors: active) {
-    .ViewFilter-search,
+    .ViewFilter-field,
     .ViewFilter-clear,
     .ViewFilter-pager button {
         border-color: ButtonBorder;
     }
 
+    .ViewFilter-field--disabled,
     .ViewFilter-search:disabled,
     .ViewFilter-pager button:disabled {
         color: GrayText;
         border-color: GrayText;
+    }
+
+    /* Both icons are stroked with currentColor, so they follow whatever colour
+       survives here. CanvasText is what the surrounding text resolves to, which
+       keeps them visible against either system background. */
+    .ViewFilter-searchIcon,
+    .ViewFilter-clearIcon {
+        color: CanvasText;
+    }
+
+    .ViewFilter-field--disabled .ViewFilter-searchIcon {
+        color: GrayText;
     }
 
     .ViewFilter-item {
@@ -404,7 +484,7 @@
 
     .ViewFilter-open:focus-visible,
     .ViewFilter-clear:focus-visible,
-    .ViewFilter-search:focus-visible,
+    .ViewFilter-field:focus-within,
     .ViewFilter-pager button:focus-visible {
         outline-color: Highlight;
     }
@@ -416,7 +496,7 @@
   them to nothing loses nothing.
 */
 @media screen and (prefers-reduced-motion: reduce) {
-    .ViewFilter-search,
+    .ViewFilter-field,
     .ViewFilter-open,
     .ViewFilter-pager button {
         transition-duration: 0.01ms;

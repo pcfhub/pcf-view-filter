@@ -88,3 +88,17 @@ nearly every view wants.
 **Filtered record count** is `-1` on a view the platform did not count, which is
 common on large tables. It travels as `-1` rather than as `0` so a formula can
 tell "none" from "unknown".
+
+## The chrome
+
+The search box carries a magnifier and the clear button is an X, both drawn as
+inline `<svg>` in the control's own markup rather than loaded as images. That is
+not decoration for its own sake: an icon behind `<img src>` renders in an
+isolated document that cannot read the page's colours, so it cannot follow a
+dark theme. Inline, both take their colour from the same Fluent tokens as the
+rest of the control.
+
+The clear button has no visible text. Its accessible name is the same localised
+string the label used to be, carried on `aria-label`, and shown on hover as a
+tooltip — so a screen reader hears what it always heard, and the button stops
+taking width away from the search box on a narrow form.
