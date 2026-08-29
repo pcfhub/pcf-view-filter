@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "slug": "pcf-view-filter",
+  "name": "View Filter",
+  "tagline": "A search box that filters the view server-side.",
+  "category": "data",
+  "tags": [
+    "dataset",
+    "search",
+    "filter",
+    "list",
+    "no-react",
+    "canvas"
+  ],
+  "control": {
+    "namespace": "PCFHub",
+    "constructor": "ViewFilter",
+    "type": "dataset",
+    "framework": "standard",
+    "manifestPath": "ViewFilter/ControlManifest.Input.xml"
+  },
+  "links": {
+    "homepage": "https://github.com/pcfhub/pcf-view-filter",
+    "support": "https://github.com/pcfhub/pcf-view-filter/issues",
+    "license": "MIT"
+  },
+  "docs": {
+    "path": "docs"
+  },
+  "media": {
+    "logo": "media/logo.png",
+    "screenshots": []
+  },
+  "demo": {
+    "fidelity": "limited",
+    "bundle": "out/controls/ViewFilter/bundle.js",
+    "styles": [
+      "out/controls/ViewFilter/css/ViewFilter.css"
+    ],
+    "datasetFixture": "demo/records.json",
+    "limitations": [
+      "Searching narrows nothing here, and that is the whole of what this control does. Filtering is server-side: the control calls dataset.filtering.setFilter() and then refresh(), which on a real view sends the query and returns a different set of records. The demo harness has no server behind it — it treats a filter request the way it treats a sort request, by accepting it and rendering the same rows. Everything the control does up to that point is real and visible in the call log: the debounce, the expression it builds, the paging reset.",
+      "Paging is inert for the same reason. The harness puts every fixture record on a single page and reports hasNextPage and hasPreviousPage as false, so Previous and Next render disabled. The page size property does nothing either, because the harness’s setPageSize() is an empty function.",
+      "The filtered record count output therefore never changes. On a real view it follows totalResultCount, which is the server’s count of what matched; here totalResultCount is the fixture length whatever is typed.",
+      "Clicking a record calls dataset.openDatasetItem(), which the harness logs as a mock call: there is no Dataverse behind this origin and no form to open. The openedRecordId output still updates, so the value a canvas app would react to is visible.",
+      "What does work is everything that never leaves the browser: the search box keeps what you type across every render, Clear empties it, the minimum-character threshold is observable, and a view with no text column to search disables the box and says so."
+    ],
+    "presets": [
+      {
+        "slug": "default",
+        "name": "Default",
+        "description": "Eight accounts with a search box over them. Type and watch the call log below: the expression, the paging reset and the refresh are all real, and only the server behind them is missing.",
+        "props": {
+          "pageSize": 25,
+          "searchColumns": "",
+          "matchMode": "startsWith",
+          "minimumCharacters": 2,
+          "debounceMs": 300,
+          "detailColumns": 2,
+          "itemClick": "open"
+        },
+        "isDefault": true
+      },
+      {
+        "slug": "contains",
+        "name": "Contains, one column",
+        "description": "Matching anywhere in the value rather than at the start, and only over the account name — the setting that keeps a search off every text column of a large table.",
+        "props": {
+          "pageSize": 25,
+          "searchColumns": "name",
+          "matchMode": "contains",
+          "minimumCharacters": 2,
+          "debounceMs": 300,
+          "detailColumns": 2,
+          "itemClick": "open"
+        }
+      },
+      {
+        "slug": "eager",
+        "name": "No pause, no threshold",
+        "description": "One character is enough and there is no typing pause, so every keystroke is a query. Useful for seeing what the debounce is for.",
+        "props": {
+          "pageSize": 25,
+          "searchColumns": "",
+          "matchMode": "startsWith",
+          "minimumCharacters": 1,
+          "debounceMs": 0,
+          "detailColumns": 2,
+          "itemClick": "open"
+        }
+      },
+      {
+        "slug": "compact",
+        "name": "Compact, read-only",
+        "description": "One detail line and records that do not open — the shape for a form section rather than a full page.",
+        "props": {
+          "pageSize": 25,
+          "searchColumns": "",
+          "matchMode": "startsWith",
+          "minimumCharacters": 2,
+          "debounceMs": 300,
+          "detailColumns": 1,
+          "itemClick": "none"
+        }
+      }
+    ]
+  }
+}

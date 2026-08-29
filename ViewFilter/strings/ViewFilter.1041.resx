@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Japanese (ja-JP, LCID 1041).
+
+    Keep the key set identical to ViewFilter.1033.resx. A key missing here does
+    not fall back to English — it renders as the key name, and only for users in
+    this language, so nobody who reads English ever sees it. `npm run check`
+    compares the two.
+
+    View Filter and A search box that filters the view server-side. are filled by `npm run setup` with the English
+    title and tagline you gave it, because the template cannot know them. They
+    are the two values in this file worth translating by hand.
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="ViewFilter_Name" xml:space="preserve">
+    <value>View Filter</value>
+  </data>
+  <data name="ViewFilter_Desc" xml:space="preserve">
+    <value>ビューをサーバー側で絞り込む検索ボックス。</value>
+  </data>
+  <data name="Records_DataSet_Name" xml:space="preserve">
+    <value>レコード</value>
+  </data>
+  <data name="PageSize_Name" xml:space="preserve">
+    <value>ページ サイズ</value>
+  </data>
+  <data name="PageSize_Desc" xml:space="preserve">
+    <value>1 ページあたりに要求する行数。プラットフォームが大きな値を制限する場合があります。</value>
+  </data>
+  <data name="SearchColumns_Name" xml:space="preserve">
+    <value>検索する列</value>
+  </data>
+  <data name="SearchColumns_Desc" xml:space="preserve">
+    <value>論理名をコンマ区切りで指定します。空の場合はビュー内のすべてのテキスト列を検索します。</value>
+  </data>
+  <data name="MatchMode_Name" xml:space="preserve">
+    <value>一致方法</value>
+  </data>
+  <data name="MatchMode_Desc" xml:space="preserve">
+    <value>値の先頭に一致するか、値のどこかに一致するか。</value>
+  </data>
+  <data name="MatchMode_StartsWith" xml:space="preserve">
+    <value>前方一致</value>
+  </data>
+  <data name="MatchMode_Contains" xml:space="preserve">
+    <value>部分一致</value>
+  </data>
+  <data name="MinimumCharacters_Name" xml:space="preserve">
+    <value>最小文字数</value>
+  </data>
+  <data name="MinimumCharacters_Desc" xml:space="preserve">
+    <value>ビューを絞り込むまでに必要な入力文字数。これを下回ると絞り込みは解除されます。</value>
+  </data>
+  <data name="DebounceMs_Name" xml:space="preserve">
+    <value>入力の待ち時間 (ミリ秒)</value>
+  </data>
+  <data name="DebounceMs_Desc" xml:space="preserve">
+    <value>最後のキー入力からサーバーに問い合わせるまでの待ち時間。</value>
+  </data>
+  <data name="DetailColumns_Name" xml:space="preserve">
+    <value>詳細行</value>
+  </data>
+  <data name="DetailColumns_Desc" xml:space="preserve">
+    <value>主要な列の後に、各レコードの下に表示する列数。</value>
+  </data>
+  <data name="ItemClick_Name" xml:space="preserve">
+    <value>レコードのクリック</value>
+  </data>
+  <data name="ItemClick_Desc" xml:space="preserve">
+    <value>レコードをクリックしたときに開くかどうか。</value>
+  </data>
+  <data name="ItemClick_Open" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="ItemClick_None" xml:space="preserve">
+    <value>何もしない</value>
+  </data>
+  <data name="OpenedRecordId_Name" xml:space="preserve">
+    <value>開いたレコードの ID</value>
+  </data>
+  <data name="OpenedRecordId_Desc" xml:space="preserve">
+    <value>最後に開いたレコードの ID。</value>
+  </data>
+  <data name="FilteredRecordCount_Name" xml:space="preserve">
+    <value>絞り込み後のレコード数</value>
+  </data>
+  <data name="FilteredRecordCount_Desc" xml:space="preserve">
+    <value>現在の絞り込みに一致したレコード数。プラットフォームが数えていない場合は -1。</value>
+  </data>
+  <data name="SearchTerm_Name" xml:space="preserve">
+    <value>検索語</value>
+  </data>
+  <data name="SearchTerm_Desc" xml:space="preserve">
+    <value>現在検索ボックスに入力されている内容。</value>
+  </data>
+  <data name="ViewFilter_Loading" xml:space="preserve">
+    <value>レコードを読み込んでいます…</value>
+  </data>
+  <data name="ViewFilter_Empty" xml:space="preserve">
+    <value>レコードがありません。</value>
+  </data>
+  <data name="ViewFilter_NoColumns" xml:space="preserve">
+    <value>このテーブルに列が選択されていません。</value>
+  </data>
+  <data name="ViewFilter_Error" xml:space="preserve">
+    <value>このビューを読み込めませんでした。</value>
+  </data>
+  <data name="ViewFilter_Previous" xml:space="preserve">
+    <value>前のページ</value>
+  </data>
+  <data name="ViewFilter_Next" xml:space="preserve">
+    <value>次のページ</value>
+  </data>
+  <data name="ViewFilter_PageStatus" xml:space="preserve">
+    <value>{0} ページ</value>
+  </data>
+  <data name="ViewFilter_RangeStatus" xml:space="preserve">
+    <value>{2} 件中 {0}–{1} 件</value>
+  </data>
+  <data name="ViewFilter_OpenRecord" xml:space="preserve">
+    <value>{0} を開く</value>
+  </data>
+  <data name="ViewFilter_Search" xml:space="preserve">
+    <value>検索</value>
+  </data>
+  <data name="ViewFilter_SearchHint" xml:space="preserve">
+    <value>検索するには {0} 文字以上入力してください</value>
+  </data>
+  <data name="ViewFilter_Clear" xml:space="preserve">
+    <value>検索をクリア</value>
+  </data>
+  <data name="ViewFilter_NoMatches" xml:space="preserve">
+    <value>「{0}」に一致するものはありません。</value>
+  </data>
+  <data name="ViewFilter_Unfilterable" xml:space="preserve">
+    <value>このビューには検索できるテキスト列がありません。</value>
+  </data>
+  <data name="ViewFilter_Filtering" xml:space="preserve">
+    <value>検索しています…</value>
+  </data>
+</root>

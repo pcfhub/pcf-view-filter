@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<manifest>
+  <!--
+    The version here is what the Power Platform upgrades on, and the release
+    workflow refuses to publish a tag that disagrees with it. Bump this in the
+    same commit as the tag.
+  -->
+  <control namespace="PCFHub"
+           constructor="ViewFilter"
+           version="0.1.0"
+           display-name-key="ViewFilter_Name"
+           description-key="ViewFilter_Desc"
+           control-type="standard">
+
+    <external-service-usage enabled="false" />
+
+    <!--
+      No `property-set` roles, deliberately.
+
+      This control filters and lists whatever the view supplies, so there is no
+      column that plays a named part in it — and there is no way to declare
+      "however many columns the view has". It reads `dataset.columns` instead,
+      where `order`, `isHidden`, `isPrimary` and `dataType` all live. The last
+      of those is what decides which columns a search can be built over: a
+      `Like` condition against a whole number is a query the server rejects.
+
+      Because there are no roles, `docs/api.md` leaves out
+      `::props-table{kind=dataset_column}` — with none declared it renders an
+      empty table, which reads as "this control has no dataset columns" rather
+      than as a section nobody wrote.
+
+      `cds-data-set-options` is left off too, and the quick-find option is the
+      one worth naming: turning it on would put the subgrid's own search box
+      above this control's, which is two search boxes filtering the same view by
+      different means. Whichever a user types in, the other looks broken.
+    -->
+    <data-set name="records" display-name-key="Records_DataSet_Name" />
+
+    <property name="pageSize"
+              display-name-key="PageSize_Name"
+              description-key="PageSize_Desc"
+              of-type="Whole.None"
+              usage="input"
+              required="false"
+              default-value="25" />
+
+    <!--
+      Which columns the search runs over, by logical name, comma-separated.
+
+      Empty means every text column in the view, which is the setting most
+      people want and the one that is slowest on a large table. Naming two or
+      three indexed columns is the difference between a search that returns and
+      one that times out.
+
+      Entries that cannot be a logical name are dropped rather than sent: a
+      logical name is /^[a-z][a-z0-9_]*$/, and anything else in a maker's typed
+      string is a mistake rather than a column. A merely *wrong* name is passed
+      through on purpose — the server's rejection is the only thing that will
+      ever name it.
+    -->
+    <property name="searchColumns"
+              display-name-key="SearchColumns_Name"
+              description-key="SearchColumns_Desc"
+              of-type="SingleLine.Text"
+              usage="input"
+              required="false" />
+
+    <property name="matchMode"
+              display-name-key="MatchMode_Name"
+              description-key="MatchMode_Desc"
+              of-type="Enum"
+              usage="input"
+              required="false"
+              default-value="startsWith">
+      <value name="startsWith" display-name-key="MatchMode_StartsWith">startsWith</value>
+      <value name="contains" display-name-key="MatchMode_Contains">contains</value>
+    </property>
+
+    <property name="minimumCharacters"
+              display-name-key="MinimumCharacters_Name"
+              description-key="MinimumCharacters_Desc"
+              of-type="Whole.None"
+              usage="input"
+              required="false"
+              default-value="2" />
+
+    <property name="debounceMs"
+              display-name-key="DebounceMs_Name"
+              description-key="DebounceMs_Desc"
+              of-type="Whole.None"
+              usage="input"
+              required="false"
+              default-value="300" />
+
+    <property name="detailColumns"
+              display-name-key="DetailColumns_Name"
+              description-key="DetailColumns_Desc"
+              of-type="Whole.None"
+              usage="input"
+              required="false"
+              default-value="2" />
+
+    <!--
+      An `Enum` with two values rather than a `TwoOptions`, and the reason is
+      the default.
+
+      A `TwoOptions` input property generates as `raw: boolean` — there is no
+      way to tell "the maker set this to false" from "the maker never touched
+      it" — so a property that wants to default to *on* cannot. Opening the
+      record on click is the behaviour nearly every view wants, so the choice is
+      either an awkwardly inverted name or this. An Enum carries a real
+      `default-value` and reads as a choice, which is what it is.
+    -->
+    <property name="itemClick"
+              display-name-key="ItemClick_Name"
+              description-key="ItemClick_Desc"
+              of-type="Enum"
+              usage="input"
+              required="false"
+              default-value="open">
+      <value name="open" display-name-key="ItemClick_Open">open</value>
+      <value name="none" display-name-key="ItemClick_None">none</value>
+    </property>
+
+    <!--
+      Notified *before* the record is opened, so the value is observable even on
+      a host where opening does nothing — which is the canvas case.
+    -->
+    <property name="openedRecordId"
+              display-name-key="OpenedRecordId_Name"
+              description-key="OpenedRecordId_Desc"
+              of-type="SingleLine.Text"
+              usage="output" />
+
+    <!--
+      How many records the current filter matched, so a canvas app can say "no
+      results" in its own words rather than relying on this control's.
+
+      It is the server's count, not the length of the page: `totalResultCount`
+      follows the filter, and it is -1 on a view the platform did not count —
+      which travels as -1 rather than as 0, because "none" and "unknown" are
+      different answers and a canvas formula can tell them apart.
+    -->
+    <property name="filteredRecordCount"
+              display-name-key="FilteredRecordCount_Name"
+              description-key="FilteredRecordCount_Desc"
+              of-type="Whole.None"
+              usage="output" />
+
+    <property name="searchTerm"
+              display-name-key="SearchTerm_Name"
+              description-key="SearchTerm_Desc"
+              of-type="SingleLine.Text"
+              usage="output" />
+
+    <resources>
+      <code path="index.ts" order="1" />
+      <css path="css/ViewFilter.css" order="1" />
+      <!--
+        Every language the control ships.
+
+        A .resx that exists on disk but is not listed here is not shipped, and
+        nothing warns — the file is simply never packed, and the control runs
+        in English for that locale while the repository looks translated.
+        `npm run check` catches both that and a key missing from a language.
+
+        Drop the ones you will not maintain. A stale translation is worse than
+        an honest fallback to English, and every key added to 1033 is a key
+        owed to each file listed here.
+
+        THE ORDER IS DELIBERATE AND 1033 GOES LAST. `pcf-start` picks the .resx
+        by manifest order rather than by locale: it reads whichever file is
+        listed *last* and ignores the LCID and the browser language entirely.
+        The platform itself ignores the order completely — a real app resolves
+        from the user's provisioned language — so `npm start` is the only thing
+        in the world that reads this order, and it is ordered for it. Listing
+        1033 first is the tidier-looking arrangement and it makes `npm start`
+        render the whole control in Japanese, which reads as a broken build.
+
+        The consequence to remember: ADD A NEW LANGUAGE ABOVE THIS LINE, not
+        below it. Appending a sixth file after 1033 silently moves the harness
+        to that language, and the symptom shows up in a `npm start` session
+        nobody connects to a manifest edit.
+      -->
+      <resx path="strings/ViewFilter.3082.resx" version="1.0.0" />
+      <resx path="strings/ViewFilter.1036.resx" version="1.0.0" />
+      <resx path="strings/ViewFilter.1031.resx" version="1.0.0" />
+      <resx path="strings/ViewFilter.1041.resx" version="1.0.0" />
+      <resx path="strings/ViewFilter.1033.resx" version="1.0.0" />
+    </resources>
+
+    <!--
+      No feature-usage, on purpose.
+
+      Filtering is a method on the dataset rather than a platform service:
+      `filtering.setFilter()` and `refresh()` need no permission, the same way
+      `openDatasetItem()` needs none. A control that declared `WebAPI` here to
+      "query" would be asking a maker for a permission it has no code to use.
+    -->
+  </control>
+</manifest>

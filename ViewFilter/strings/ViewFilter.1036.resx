@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    French (fr-FR, LCID 1036).
+
+    Keep the key set identical to ViewFilter.1033.resx. A key missing here does
+    not fall back to English — it renders as the key name, and only for users in
+    this language, so nobody who reads English ever sees it. `npm run check`
+    compares the two.
+
+    View Filter and A search box that filters the view server-side. are filled by `npm run setup` with the English
+    title and tagline you gave it, because the template cannot know them. They
+    are the two values in this file worth translating by hand.
+  -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <data name="ViewFilter_Name" xml:space="preserve">
+    <value>View Filter</value>
+  </data>
+  <data name="ViewFilter_Desc" xml:space="preserve">
+    <value>Une zone de recherche qui filtre la vue côté serveur.</value>
+  </data>
+  <data name="Records_DataSet_Name" xml:space="preserve">
+    <value>Enregistrements</value>
+  </data>
+  <data name="PageSize_Name" xml:space="preserve">
+    <value>Taille de page</value>
+  </data>
+  <data name="PageSize_Desc" xml:space="preserve">
+    <value>Nombre de lignes demandées par page. La plateforme peut limiter les grandes valeurs.</value>
+  </data>
+  <data name="SearchColumns_Name" xml:space="preserve">
+    <value>Colonnes de recherche</value>
+  </data>
+  <data name="SearchColumns_Desc" xml:space="preserve">
+    <value>Noms logiques séparés par des virgules. Vide recherche dans chaque colonne de texte de la vue.</value>
+  </data>
+  <data name="MatchMode_Name" xml:space="preserve">
+    <value>Correspondance</value>
+  </data>
+  <data name="MatchMode_Desc" xml:space="preserve">
+    <value>Si un terme correspond au début d’une valeur ou n’importe où à l’intérieur.</value>
+  </data>
+  <data name="MatchMode_StartsWith" xml:space="preserve">
+    <value>Commence par</value>
+  </data>
+  <data name="MatchMode_Contains" xml:space="preserve">
+    <value>Contient</value>
+  </data>
+  <data name="MinimumCharacters_Name" xml:space="preserve">
+    <value>Caractères minimum</value>
+  </data>
+  <data name="MinimumCharacters_Desc" xml:space="preserve">
+    <value>Ce qu’il faut saisir avant de filtrer la vue. En dessous, le filtre est effacé.</value>
+  </data>
+  <data name="DebounceMs_Name" xml:space="preserve">
+    <value>Pause de saisie (ms)</value>
+  </data>
+  <data name="DebounceMs_Desc" xml:space="preserve">
+    <value>Délai après la dernière frappe avant d’interroger le serveur.</value>
+  </data>
+  <data name="DetailColumns_Name" xml:space="preserve">
+    <value>Lignes de détail</value>
+  </data>
+  <data name="DetailColumns_Desc" xml:space="preserve">
+    <value>Nombre de colonnes affichées sous chaque enregistrement, après la principale.</value>
+  </data>
+  <data name="ItemClick_Name" xml:space="preserve">
+    <value>Clic sur un enregistrement</value>
+  </data>
+  <data name="ItemClick_Desc" xml:space="preserve">
+    <value>Si cliquer sur un enregistrement l’ouvre.</value>
+  </data>
+  <data name="ItemClick_Open" xml:space="preserve">
+    <value>L’ouvre</value>
+  </data>
+  <data name="ItemClick_None" xml:space="preserve">
+    <value>Ne fait rien</value>
+  </data>
+  <data name="OpenedRecordId_Name" xml:space="preserve">
+    <value>ID de l’enregistrement ouvert</value>
+  </data>
+  <data name="OpenedRecordId_Desc" xml:space="preserve">
+    <value>L’ID du dernier enregistrement ouvert.</value>
+  </data>
+  <data name="FilteredRecordCount_Name" xml:space="preserve">
+    <value>Nombre d’enregistrements filtrés</value>
+  </data>
+  <data name="FilteredRecordCount_Desc" xml:space="preserve">
+    <value>Nombre d’enregistrements trouvés par le filtre actuel, ou -1 si la plateforme ne les a pas comptés.</value>
+  </data>
+  <data name="SearchTerm_Name" xml:space="preserve">
+    <value>Terme recherché</value>
+  </data>
+  <data name="SearchTerm_Desc" xml:space="preserve">
+    <value>Ce qui est actuellement saisi dans la zone de recherche.</value>
+  </data>
+  <data name="ViewFilter_Loading" xml:space="preserve">
+    <value>Chargement des enregistrements…</value>
+  </data>
+  <data name="ViewFilter_Empty" xml:space="preserve">
+    <value>Aucun enregistrement.</value>
+  </data>
+  <data name="ViewFilter_NoColumns" xml:space="preserve">
+    <value>Aucune colonne n’est sélectionnée pour ce tableau.</value>
+  </data>
+  <data name="ViewFilter_Error" xml:space="preserve">
+    <value>Cette vue n’a pas pu être chargée.</value>
+  </data>
+  <data name="ViewFilter_Previous" xml:space="preserve">
+    <value>Page précédente</value>
+  </data>
+  <data name="ViewFilter_Next" xml:space="preserve">
+    <value>Page suivante</value>
+  </data>
+  <data name="ViewFilter_PageStatus" xml:space="preserve">
+    <value>Page {0}</value>
+  </data>
+  <data name="ViewFilter_RangeStatus" xml:space="preserve">
+    <value>{0}–{1} sur {2}</value>
+  </data>
+  <data name="ViewFilter_OpenRecord" xml:space="preserve">
+    <value>Ouvrir {0}</value>
+  </data>
+  <data name="ViewFilter_Search" xml:space="preserve">
+    <value>Rechercher</value>
+  </data>
+  <data name="ViewFilter_SearchHint" xml:space="preserve">
+    <value>Saisissez {0} caractères pour rechercher</value>
+  </data>
+  <data name="ViewFilter_Clear" xml:space="preserve">
+    <value>Effacer la recherche</value>
+  </data>
+  <data name="ViewFilter_NoMatches" xml:space="preserve">
+    <value>Rien ne correspond à « {0} ».</value>
+  </data>
+  <data name="ViewFilter_Unfilterable" xml:space="preserve">
+    <value>Cette vue n’a aucune colonne de texte à rechercher.</value>
+  </data>
+  <data name="ViewFilter_Filtering" xml:space="preserve">
+    <value>Recherche en cours…</value>
+  </data>
+</root>
