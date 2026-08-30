@@ -13,6 +13,8 @@ re-query: it builds a `FilterExpression` of `Like` conditions across the view's
 text columns, resets the page, and calls `refresh()`. What comes back is a
 different set of records, not a subset of the ones already on screen.
 
+::image{src=media/screenshot.png alt="View Filter with contoso typed in, showing the one matching account" zoom}
+
 ## Why this one
 
 - **Server-side is the whole point.** A control that filters the records it
