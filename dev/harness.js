@@ -55,6 +55,7 @@
                 uncounted: document.getElementById('harness-uncounted').checked,
                 hasLoadExactPage: document.getElementById('harness-exactpage').checked,
                 sortingAbsent: document.getElementById('harness-nosorting').checked,
+                heightUnmeasured: document.getElementById('harness-noheight').checked,
                 filteringAbsent: document.getElementById('harness-nofiltering').checked,
             },
         };
